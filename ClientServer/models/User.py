@@ -1,4 +1,4 @@
-from ClientServer.app.models.db_config import db
+from ClientServer.models.db_config import db
 from sqlalchemy import Column, Integer, String, Enum
 
 

@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
-from ClientServer.app.models.db_config import db
+from ClientServer.models.db_config import db
 
 
 class Snippet(db.Model):

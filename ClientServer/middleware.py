@@ -3,7 +3,7 @@ from functools import wraps
 import jwt
 from flask import request, jsonify
 
-from ClientServer.app.constants import JWT_SECRET_KEY
+from constants import JWT_SECRET_KEY
 
 
 def error_handler(f):

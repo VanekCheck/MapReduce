@@ -2,8 +2,8 @@ import hashlib
 
 import jwt
 
-from ClientServer.app.constants import JWT_SECRET_KEY
-from ClientServer.app.models.User import get_user_by_id, get_username_by_id
+from ClientServer.constants import JWT_SECRET_KEY
+from ClientServer.models.User import get_user_by_id, get_username_by_id
 
 
 def get_username(request):

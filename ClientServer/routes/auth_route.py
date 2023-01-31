@@ -1,9 +1,9 @@
 import jwt
 from flask import Blueprint, request, jsonify
 
-from ClientServer.app.constants import JWT_SECRET_KEY
-from ClientServer.app.helpers.auth import is_valid_password, get_hash
-from ClientServer.app.models.User import add_user, get_user_by_username
+from ClientServer.constants import JWT_SECRET_KEY
+from ClientServer.helpers.auth import is_valid_password, get_hash
+from ClientServer.models.User import get_user_by_username, add_user
 
 auth_route = Blueprint('route', __name__)
 

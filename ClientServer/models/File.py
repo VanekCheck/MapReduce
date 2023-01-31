@@ -1,7 +1,7 @@
 import datetime
 
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, CheckConstraint
-from ClientServer.app.models.db_config import db
+from ClientServer.models.db_config import db
 
 
 class File(db.Model):

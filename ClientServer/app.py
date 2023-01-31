@@ -2,10 +2,10 @@ from flask import Flask
 
 from config import Config
 
-from ClientServer.app.constants import DATABASE_URI
-from ClientServer.app.models.db_config import db
-from ClientServer.app.routes.auth_route import auth_route
-from ClientServer.app.routes.file_route import file_route
+from ClientServer.constants import DATABASE_URI
+from ClientServer.models.db_config import db
+from ClientServer.routes.auth_route import auth_route
+from ClientServer.routes.file_route import file_route
 
 
 # TODO: get file return file as formdata

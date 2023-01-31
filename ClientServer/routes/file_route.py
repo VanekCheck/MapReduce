@@ -7,12 +7,12 @@ from flask import request, jsonify, Blueprint
 import requests
 from werkzeug.utils import secure_filename
 
-from ClientServer.app.constants import urlAddresses
-from ClientServer.app.helpers.auth import get_auth_header, get_user
-from ClientServer.app.middleware import auth_middleware, error_handler
-from ClientServer.app.models.File import insert_file_data, get_all_user_filenames, get_file_by_file_name, \
+from ClientServer.constants import urlAddresses
+from ClientServer.helpers.auth import get_auth_header, get_user
+from ClientServer.middleware import auth_middleware, error_handler
+from ClientServer.models.File import insert_file_data, get_all_user_filenames, get_file_by_file_name, \
     delete_file_by_file_id
-from ClientServer.app.models.Snippet import insert_snippet, delete_file_snippets, get_file_snippets
+from ClientServer.models.Snippet import insert_snippet, delete_file_snippets, get_file_snippets
 
 file_route = Blueprint('route', __name__)
 
@@ -74,7 +74,7 @@ def upload_file():
 
     user = get_user(request)
 
-    file_data = insert_file_data(file_name=filename, path='./', user_id=user.id, size=file_total_size)
+    file_data = insert_file_data(file_name=filename, path='/', user_id=user.id, size=file_total_size)
 
     # create the files
     for i in range(num_files):
