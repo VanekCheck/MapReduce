@@ -1,16 +1,18 @@
-import math
-import os
-import shutil
-import socket
-import uuid
 from functools import wraps
 
-from flask import Flask, request, jsonify
 import jwt
+from flask import request, jsonify
 
-app = Flask(__name__)
+from constants import JWT_SECRET_KEY
 
-urlAddresses = ['http://127.0.0.1:5001', 'http://127.0.0.1:5002', 'http://127.0.0.1:5003']
+
+def error_handler(f):
+    def wrapper(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except Exception as e:
+            return str(e)
+    return wrapper
 
 
 def auth_middleware(f):
@@ -20,7 +22,7 @@ def auth_middleware(f):
         if not token:
             return jsonify({'message': 'Token is missing!'}), 401
         try:
-            jwt.decode(token, 'future secret key', algorithms=["HS256"])
+            jwt.decode(token, JWT_SECRET_KEY, algorithms=["HS256"])
 
         except:
             return jsonify({'message': 'Token is invalid!'}), 401
@@ -28,8 +30,3 @@ def auth_middleware(f):
         return f(*args, **kwargs)
 
     return decorated
-
-
-if __name__ == '__main__':
-    app.run(port=5009)
-# python app.py --port 5001

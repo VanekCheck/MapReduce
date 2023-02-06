@@ -18,36 +18,60 @@ args = parser.parse_args()
 def upload_file():
     username = request.form['username']
     filename = request.form['filename']
+    path = request.form['path']
     file = request.files['file']
 
     if file:
         chunk_filename = secure_filename(file.filename)
 
-        if not os.path.exists('./storage/' + str(args.port)):
-            os.makedirs('./storage/' + str(args.port))
+        general_path = f'./storage/{str(args.port)}/{username}/{path}/{filename}/'
 
-        if not os.path.exists('./storage/' + str(args.port) + '/' + username):
-            os.makedirs('./storage/' + str(args.port) + '/' + username)
+        if not os.path.exists(general_path):
+            os.makedirs(general_path)
 
-        if not os.path.exists('./storage/' + str(args.port) + '/' + username + '/' + filename):
-            os.makedirs('./storage/' + str(args.port) + '/' + username + '/' + filename)
-
-        file.save(os.path.join(f'./storage/{str(args.port)}/{username}/{filename}/', chunk_filename))
+        file.save(os.path.join(general_path, chunk_filename))
         return jsonify({'message': 'File uploaded successfully'})
+
+
+def delete_empty_directories(pre_path, path):
+    current_path = path
+    directories = path.split(sep="/")
+    for curr_index in range(len(directories), 0, -1):
+        if not delete_empty_dir(pre_path + current_path):
+            break
+        if curr_index != 1:
+            current_path = current_path.replace('/' + directories[curr_index - 1], '')
+
+
+def delete_empty_dir(dir_path):
+    if os.path.exists(dir_path) and os.path.isdir(dir_path):
+        if not os.listdir(dir_path):
+            os.rmdir(dir_path)
+            return True
+        else:
+            return False
+    else:
+        return False
 
 
 @app.route('/file/<filename>', methods=['DELETE'])
 def delete_file(filename):
     username = request.form['username']
-    shutil.rmtree('./storage/' + str(args.port) + '/' + username + '/' + filename)
+    path = request.form['path']
+    pre_path = f'./storage/{str(args.port)}/{username}/'
+    shutil.rmtree(pre_path + path + "/" + filename)
+    delete_empty_directories(pre_path, path)
     return jsonify({'message': 'File deleted successfully'}), 200
 
 
 @app.route('/file/<filename>', methods=['GET'])
 def get_file(filename):
     username = request.form['username']
+    path = request.form['path']
     index = request.form['index']
-    with open(f'./storage/{str(args.port)}/{username}/{filename}/{filename}_{index}.txt', 'r') as f:
+    pre_path = f'./storage/{str(args.port)}/{username}/{path}/'
+
+    with open(f'{pre_path}{filename}/{filename}_{index}.txt', 'r') as f:
         file_data = f.read()
         return jsonify({'file_data': file_data}), 200
 

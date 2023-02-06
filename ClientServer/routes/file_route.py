@@ -35,6 +35,7 @@ def list_of_user_files():
 def upload_file():
     # try:
     file = request.files['file']
+    path = request.form['path']
 
     # TODO: move to middleware
     if not file:
@@ -74,7 +75,7 @@ def upload_file():
 
     user = get_user(request)
 
-    file_data = insert_file_data(file_name=filename, path='/', user_id=user.id, size=file_total_size)
+    file_data = insert_file_data(file_name=filename, path=path, user_id=user.id, size=file_total_size)
 
     # create the files
     for i in range(num_files):
@@ -85,7 +86,7 @@ def upload_file():
             f.write('\n'.join(file_lines[i * separating_size:(i + 1) * separating_size]))
 
             files = {'file': open('./temporary-folder/' + session_id + '/' + filename + f'_{i}.txt', 'rb')}
-            data = {'username': user.username, 'filename': filename}
+            data = {'username': user.username, 'filename': filename, 'path': path}
 
             data_node_url = urlAddresses[i % len(urlAddresses)]
 
@@ -117,7 +118,7 @@ def delete_file(filename):
         user = get_user(request)
         file = get_file_by_file_name(file_name=filename, user_id=user.id)
 
-        data = {'username': user.username}
+        data = {'username': user.username, 'path': file.path}
         for urlAddress in urlAddresses:
             url = f'{urlAddress}/file/{filename}'
             response = requests.delete(url, data=data)
@@ -143,7 +144,7 @@ def get_file(filename):
 
     file_snippets = []
     for snippet in snippets:
-        data = {'username': user.username, 'index': snippet.index}
+        data = {'username': user.username, 'index': snippet.index, 'path': file.path}
         url = f'{snippet.data_node}/file/{filename}'
         response = requests.get(url, data=data).json()
         file_data = response['file_data']
@@ -159,4 +160,6 @@ def get_file(filename):
 
     # except:
     #     return jsonify({'message': 'Something went wrong'}), 400
+
+
 
